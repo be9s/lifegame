@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import Cell from "@/Cell";
+import Cell from "@/components/Cell";
 export default {
   components: { Cell },
   props: ["board"],
