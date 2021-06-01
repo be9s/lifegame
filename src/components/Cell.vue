@@ -8,7 +8,7 @@ export default {
 </script>
 <style scoped>
 .cell {
-  border: 1px solid;
+  border: 1px solid #dcdfe6;
   width: 20px;
   height: 20px;
 }

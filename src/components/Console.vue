@@ -1,8 +1,8 @@
 <template>
-  <el-card class="console">
+  <el-card class="console" :body-style="{ padding: '0px' }">
     <div class="option">
       <el-button
-        v-if="state.pause"
+        v-if="pause"
         circle
         type="success"
         icon="el-icon-video-play"
@@ -29,7 +29,7 @@
       />
     </div>
     <div class="option">
-      <span class="label">速度</span>
+      <span class="label" style="margin-right: 10px;">速度</span>
       <el-slider
         style="flex: auto"
         :value="state.speed"
@@ -39,36 +39,34 @@
         @input="(speed) => onUpdate({ speed })"
       />
     </div>
-    <div class="option">
-      <span class="label">行数</span>
+    <div class="option size-option">
       <el-input-number
-        style="flex: auto"
+        style="width: 50px;"
         :value="state.rows"
         :min="5"
         :max="30"
         size="small"
-        controls-position="right"
+        :controls="false"
         @change="(rows) => onUpdate({ rows })"
       />
-    </div>
-    <div class="option">
-      <span class="label">列数</span>
+      <span class="label">行</span>
       <el-input-number
-        style="flex: auto"
+        style="width: 50px;"
         :value="state.cols"
         :min="5"
         :max="50"
         size="small"
-        controls-position="right"
+        :controls="false"
         @change="(cols) => onUpdate({ cols })"
       />
+      <span class="label">列</span>
     </div>
   </el-card>
 </template>
 
 <script>
 export default {
-  props: ["state"],
+  props: ["state", "pause"],
   methods: {
     onUpdate(val) {
       this.$emit("update:state", { ...this.state, ...val });
@@ -82,19 +80,23 @@ export default {
 .console {
   padding: 10px 20px;
   position: fixed;
-  top: 0;
-  right: 0;
+  top: 10px;
+  left: calc(100% - 21px);
+  transition: 0.5s;
+}
+.console:hover {
+  transform: translateX(-190px);
+  transition: 0.2s;
 }
 .option {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
 }
 .el-button >>> i[class^="el-icon"] {
   font-size: 24px;
 }
 .label {
-  margin-right: 10px;
   font-size: 14px;
   color: #8492a6;
 }
