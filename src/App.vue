@@ -24,8 +24,8 @@ export default {
       state: {
         count: 0,
         pause: true,
-        rows: 20,
-        cols: 20,
+        rows: 15,
+        cols: 15,
         speed: 2,
       },
     };
