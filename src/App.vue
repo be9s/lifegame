@@ -1,12 +1,13 @@
 <template>
   <div id="app">
-    <div class="score">{{ "live: " + state.count }}</div>
+    <div class="score">{{ "live: " + count }}</div>
     <Board :board="board" @click="onClickBoard" />
     <Console
       @onStart="onStart"
       @onPause="onPause"
       @onNext="onNext"
       @onReset="onReset"
+      :pause="pause"
       :state.sync="state"
     />
   </div>
@@ -21,9 +22,9 @@ export default {
   data() {
     return {
       board: [],
+      count: 0,
+      pause: true,
       state: {
-        count: 0,
-        pause: true,
         rows: 15,
         cols: 15,
         speed: 2,
@@ -93,49 +94,47 @@ export default {
         }
       }
       this.board = next;
-      this.state.count = count;
+      this.count = count;
       console.log("live: " + count);
     },
     evolve() {
-      if (this.state.pause) {
+      if (this.pause) {
         return;
       }
       this.toNextTick();
-      if (this.state.count === 0) {
+      if (this.count === 0) {
         this.onReset();
       } else {
         setTimeout(this.evolve, this.interval);
       }
     },
     onClickBoard(e) {
-      let y = e.target.cID.split("/")[0];
-      let x = e.target.cID.split("/")[1];
-      let nextBoard = [];
-      for (const row of this.board) {
-        nextBoard.push([...row]);
-      }
-      nextBoard[y][x] = !nextBoard[y][x];
-      nextBoard[y][x] ? this.state.count++ : this.state.count--;
-      this.board = nextBoard;
+      let coordinate = e.target.cID;
+      if (!coordinate) return;
+      let y = coordinate.split("/")[0];
+      let x = coordinate.split("/")[1];
+      this.board[y][x] = !this.board[y][x];
+      this.board = [...this.board];
+      this.board[y][x] ? this.count++ : this.count--;
     },
     onStart() {
       console.log("start");
-      this.state.pause = false;
+      this.pause = false;
       this.evolve();
     },
     onPause() {
       console.log("pause");
-      this.state.pause = true;
+      this.pause = true;
     },
     onNext() {
       console.log("next");
-      this.state.pause = true;
+      this.pause = true;
       this.toNextTick();
     },
     onReset() {
       console.log("reset");
-      this.state.pause = true;
-      this.state.count = 0;
+      this.pause = true;
+      this.count = 0;
       this.board = Array.from(Array(this.state.rows)).map(() =>
         Array(this.state.cols).fill(false)
       );
@@ -152,5 +151,6 @@ export default {
 }
 .score {
   position: fixed;
+  font-size: 24px;
 }
 </style>
