@@ -1,5 +1,5 @@
 <template>
-  <div class="console">
+  <el-card class="console">
     <div class="option">
       <el-button
         v-if="state.pause"
@@ -36,7 +36,7 @@
         :min="0"
         :max="4"
         :show-tooltip="false"
-        @input="(speed) => $emit('update:state', { ...state, speed })"
+        @input="(speed) => onUpdate({ speed })"
       />
     </div>
     <div class="option">
@@ -48,12 +48,7 @@
         :max="30"
         size="small"
         controls-position="right"
-        @change="
-          (rows) => {
-            $emit('update:state', { ...state, rows });
-            $emit('onReset');
-          }
-        "
+        @change="(rows) => onUpdate({ rows })"
       />
     </div>
     <div class="option">
@@ -65,20 +60,21 @@
         :max="50"
         size="small"
         controls-position="right"
-        @change="
-          (cols) => {
-            $emit('update:state', { ...state, cols });
-            $emit('onReset');
-          }
-        "
+        @change="(cols) => onUpdate({ cols })"
       />
     </div>
-  </div>
+  </el-card>
 </template>
 
 <script>
 export default {
   props: ["state"],
+  methods: {
+    onUpdate(val) {
+      this.$emit("update:state", { ...this.state, ...val });
+      val.speed === undefined && this.$emit("onReset");
+    },
+  },
 };
 </script>
 
