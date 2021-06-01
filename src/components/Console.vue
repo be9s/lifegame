@@ -43,6 +43,7 @@
       <el-input-number
         style="width: 50px;"
         :value="state.rows"
+        :disabled="!pause"
         :min="5"
         :max="30"
         size="small"
@@ -52,6 +53,7 @@
       <span class="label">行</span>
       <el-input-number
         style="width: 50px;"
+        :disabled="!pause"
         :value="state.cols"
         :min="5"
         :max="50"
@@ -64,11 +66,13 @@
     <div class="option">
       <el-slider
         style="flex: auto"
+        :disabled="!pause"
         v-model="percent"
         :format-tooltip="formatTooltip"
       />
       <el-button
         class="refresh"
+        :disabled="!pause"
         circle
         icon="el-icon-refresh"
         @click="$emit('onRandom', percent)"
