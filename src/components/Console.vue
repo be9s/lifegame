@@ -29,17 +29,17 @@
       />
     </div>
     <div class="option">
-      <span class="label" style="margin-right: 10px;">速度</span>
+      <span class="label" style="margin-right: 12px;">速度</span>
       <el-slider
         style="flex: auto"
         :value="state.speed"
         :min="0"
         :max="4"
         :show-tooltip="false"
-        @input="(speed) => onUpdate({ speed })"
+        @input="(speed) => onUpdate('speed', speed)"
       />
     </div>
-    <div class="option size-option">
+    <div class="option">
       <el-input-number
         style="width: 50px;"
         :value="state.rows"
@@ -47,7 +47,7 @@
         :max="30"
         size="small"
         :controls="false"
-        @change="(rows) => onUpdate({ rows })"
+        @change="(rows) => onUpdate('rows', rows)"
       />
       <span class="label">行</span>
       <el-input-number
@@ -57,9 +57,22 @@
         :max="50"
         size="small"
         :controls="false"
-        @change="(cols) => onUpdate({ cols })"
+        @change="(cols) => onUpdate('cols', cols)"
       />
       <span class="label">列</span>
+    </div>
+    <div class="option">
+      <el-slider
+        style="flex: auto"
+        v-model="percent"
+        :format-tooltip="formatTooltip"
+      />
+      <el-button
+        class="refresh"
+        circle
+        icon="el-icon-refresh"
+        @click="$emit('onRandom', percent)"
+      />
     </div>
   </el-card>
 </template>
@@ -67,10 +80,21 @@
 <script>
 export default {
   props: ["state", "pause"],
+  data() {
+    return {
+      percent: 20,
+    };
+  },
   methods: {
-    onUpdate(val) {
-      this.$emit("update:state", { ...this.state, ...val });
-      val.speed === undefined && this.$emit("onReset");
+    onUpdate(name, val) {
+      let updated = { ...this.state };
+      name != "speed" && (val = val || 5);
+      updated[name] = val;
+      this.$emit("update:state", updated);
+      name != "speed" && this.$emit("onReset");
+    },
+    formatTooltip(val) {
+      return val + "%";
     },
   },
 };
@@ -93,11 +117,18 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-.el-button >>> i[class^="el-icon"] {
+.el-button >>> i {
   font-size: 24px;
 }
 .label {
   font-size: 14px;
   color: #8492a6;
+}
+.el-button.refresh {
+  margin-left: 12px;
+  padding: 8px;
+}
+.el-button.refresh >>> i {
+  font-size: 14px;
 }
 </style>

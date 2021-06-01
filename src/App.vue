@@ -7,6 +7,7 @@
       @onPause="onPause"
       @onNext="onNext"
       @onReset="onReset"
+      @onRandom="onRandom"
       :pause="pause"
       :state.sync="state"
     />
@@ -114,8 +115,8 @@ export default {
       let y = coordinate.split("/")[0];
       let x = coordinate.split("/")[1];
       this.board[y][x] = !this.board[y][x];
-      this.board = [...this.board];
       this.board[y][x] ? this.count++ : this.count--;
+      this.board = [...this.board];
     },
     onStart() {
       console.log("start");
@@ -135,9 +136,28 @@ export default {
       console.log("reset");
       this.pause = true;
       this.count = 0;
-      this.board = Array.from(Array(this.state.rows)).map(() =>
+      this.board = [...Array(this.state.rows)].map(() =>
         Array(this.state.cols).fill(false)
       );
+    },
+    onRandom(percent) {
+      console.log("random");
+      this.onReset();
+      let vm = this;
+      let x, y;
+      let sum = this.state.rows * this.state.cols;
+      let subset = [];
+      for (let i = 0; i < sum; i++) {
+        subset.push(i);
+      }
+      subset.sort(() => Math.random() - 0.5);
+      this.count = Math.round((sum * percent) / 100);
+      subset = subset.slice(0, this.count);
+      subset.forEach((val) => {
+        y = Math.floor(val / vm.state.cols);
+        x = val % vm.state.cols;
+        vm.board[y][x] = true;
+      });
     },
   },
 };
