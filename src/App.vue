@@ -12,6 +12,7 @@
       :state.sync="state"
     />
     <Preset @onPreset="onPreset" />
+    <div class="version">ver 1.0</div>
   </div>
 </template>
 
@@ -186,5 +187,11 @@ export default {
 .score {
   position: fixed;
   font-size: 24px;
+}
+.version {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  color: #909399;
 }
 </style>
