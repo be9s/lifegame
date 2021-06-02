@@ -11,15 +11,17 @@
       :pause="pause"
       :state.sync="state"
     />
+    <Preset @onPreset="onPreset" />
   </div>
 </template>
 
 <script>
 import Board from "@/components/Board";
 import Console from "@/components/Console";
+import Preset from "@/components/Preset";
 
 export default {
-  components: { Board, Console },
+  components: { Board, Console, Preset },
   data() {
     return {
       board: [],
@@ -56,8 +58,8 @@ export default {
   methods: {
     toNextTick() {
       let count = 0;
-      let rows = this.board.length;
-      let cols = this.board[0].length;
+      let rows = this.state.rows;
+      let cols = this.state.cols;
       let next = [];
       for (const row of this.board) {
         next.push([...row]);
@@ -143,7 +145,6 @@ export default {
     onRandom(percent) {
       console.log("random");
       this.onReset();
-      let vm = this;
       let x, y;
       let sum = this.state.rows * this.state.cols;
       let subset = [];
@@ -154,10 +155,23 @@ export default {
       this.count = Math.round((sum * percent) / 100);
       subset = subset.slice(0, this.count);
       subset.forEach((val) => {
-        y = Math.floor(val / vm.state.cols);
-        x = val % vm.state.cols;
-        vm.board[y][x] = true;
+        y = Math.floor(val / this.state.cols);
+        x = val % this.state.cols;
+        this.board[y][x] = true;
       });
+    },
+    onPreset(board) {
+      console.log("preset");
+      let rows = board.length;
+      let cols = board[0].length;
+      this.state.rows = rows;
+      this.state.cols = cols;
+      this.onReset();
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          board[y][x] && ++this.count && (this.board[y][x] = true);
+        }
+      }
     },
   },
 };

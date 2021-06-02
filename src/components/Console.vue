@@ -44,7 +44,7 @@
         style="width: 50px;"
         :value="state.rows"
         :disabled="!pause"
-        :min="5"
+        :min="4"
         :max="30"
         size="small"
         :controls="false"
@@ -55,7 +55,7 @@
         style="width: 50px;"
         :disabled="!pause"
         :value="state.cols"
-        :min="5"
+        :min="4"
         :max="50"
         size="small"
         :controls="false"
@@ -110,10 +110,10 @@ export default {
   position: fixed;
   top: 10px;
   left: calc(100% - 21px);
-  transition: 0.5s;
+  transition: 0.4s;
 }
 .console:hover {
-  transform: translateX(-190px);
+  transform: translateX(calc(-100% + 21px));
   transition: 0.2s;
 }
 .option {
