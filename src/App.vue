@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <div class="score">{{ "live: " + count }}</div>
+    <Monitor class="monitor" :ratio="ratio" />
     <Board :board="board" @click="onClickBoard" />
     <Console
       @onStart="onStart"
@@ -12,7 +13,7 @@
       :state.sync="state"
     />
     <Preset @onPreset="onPreset" />
-    <div class="version">ver 1.0</div>
+    <div class="version">ver 1.1</div>
   </div>
 </template>
 
@@ -20,9 +21,10 @@
 import Board from "@/components/Board";
 import Console from "@/components/Console";
 import Preset from "@/components/Preset";
+import Monitor from "@/components/Monitor";
 
 export default {
-  components: { Board, Console, Preset },
+  components: { Board, Console, Preset, Monitor },
   data() {
     return {
       board: [],
@@ -51,6 +53,11 @@ export default {
         default:
           return 500;
       }
+    },
+    ratio() {
+      return Math.floor(
+        (this.count * 100) / (this.state.rows * this.state.cols)
+      );
     },
   },
   created() {
@@ -193,5 +200,8 @@ export default {
   bottom: 0;
   right: 0;
   color: #909399;
+}
+.monitor {
+  position: fixed;
 }
 </style>
